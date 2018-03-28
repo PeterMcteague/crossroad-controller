@@ -2,7 +2,7 @@ with HWIF; use HWIF;
 with HWIF_Types; use HWIF_Types;
 
 procedure Controller is
-   Delays : constant array (1..10) of Duration := (2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0);
+   Delays : constant array (1..11) of Duration := (2.0,2.0,5.0,3.0,2.0,2.0,5.0,3.0,2.0,6.0,6.0);
 
    State : Integer := 1;
    NextState: Integer;
@@ -82,16 +82,6 @@ begin
             Pedestrian_Wait(East) := 0;
             Pedestrian_Wait(West) := 0;
 
-         when 12 => --NSEW Pedestrian lights G--
-            Pedestrian_Light(North) := 1;
-            Pedestrian_Light(South) := 1;
-            Pedestrian_Light(East) := 1;
-            Pedestrian_Light(West) := 1;
-            Pedestrian_Wait(North) := 0;
-            Pedestrian_Wait(South) := 0;
-            Pedestrian_Wait(East) := 0;
-            Pedestrian_Wait(West) := 0;
-
          when others =>
             null;
       end case;
@@ -100,17 +90,13 @@ begin
       case State is
 
          when 1 =>
-            --When all pedestrian buttons pressed and at an all red--
-            if (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1)
-            and (Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1) then
-               NextState := 12;
             --When N or S pedestrian buttons pressed and at an all red--
-            elsif (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1)
-            and (Pedestrian_Button(East) /= 1 and Pedestrian_Button(West) /= 1) then
+            if (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1)
+              and (Emergency_Vehicle_Sensor(North) /= 1 and Emergency_Vehicle_Sensor(South) /= 1) then
                NextState := 10;
             --When E or W pedestrian buttons pressed and at an all red--
             elsif (Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1)
-            and (Pedestrian_Button(North) /= 1 and Pedestrian_Button(South) /= 1) then
+              and (Emergency_Vehicle_Sensor(East) /= 1 and Emergency_Vehicle_Sensor(West) /= 1)then
                NextState := 11;
             end if;
 
@@ -118,7 +104,7 @@ begin
             NextState := 1;
 
          --Go back to all red from pedestrian green
-         when 10..12 =>
+         when 10..11 =>
             NextState := 1;
 
          when others =>
@@ -131,17 +117,12 @@ begin
             else
                NextState := State + 1;
             end if;
-      end case;
+   end case;
 
-      if Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1 then
-         State := 3;
-      elsif Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1 then
-         State := 7;
-      else
-         --Delay for length of state and then swap to the next state--
-         delay Delays(state);
-         State := NextState;
-      end if;
+   --Delay for length of state and then swap to the next state--
+   delay Delays(state);
+   State := NextState;
+
    end loop Endless_Loop;
 end Controller;
 
