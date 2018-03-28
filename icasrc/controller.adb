@@ -99,6 +99,7 @@ begin
               and (Emergency_Vehicle_Sensor(East) /= 1 and Emergency_Vehicle_Sensor(West) /= 1)then
                NextState := 11;
             end if;
+            NextState := State + 1;
 
          when 9 =>
             NextState := 1;
@@ -114,14 +115,13 @@ begin
             elsif Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1 then
                Pedestrian_Wait(East) := 1;
                Pedestrian_Wait(West) := 1;
-            else
-               NextState := State + 1;
             end if;
-   end case;
+            NextState := State + 1;
+      end case;
 
-   --Delay for length of state and then swap to the next state--
-   delay Delays(state);
-   State := NextState;
+      --Delay for length of state and then swap to the next state--
+      delay Delays(State);
+      State := NextState;
 
    end loop Endless_Loop;
 end Controller;
