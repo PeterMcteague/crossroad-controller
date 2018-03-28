@@ -1,0 +1,31 @@
+V "GNAT Lib v2017"
+A -O2
+A -Werror=format-security
+A -gnatA
+A -g
+A -gnata
+A -gnato
+A -gnatwa
+A -gnatVa
+A -gnat12
+A -mtune=generic
+A -march=pentium4
+P ZX
+
+RN
+RV NO_IMPLEMENTATION_PRAGMAS
+
+U pedestrianbuttons%b	pedestrianbuttons.adb	21401bb1 NE OO PK IL
+
+U pedestrianbuttons%s	pedestrianbuttons.ads	89fa6139 EE NE OO PK IL
+
+D pedestrianbuttons.ads	20180219194202 89fa6139 pedestrianbuttons%s
+D pedestrianbuttons.adb	20180219194338 a8ba7a88 pedestrianbuttons%b
+D system.ads		20170516105954 32a08138 system%s
+X 1 pedestrianbuttons.ads
+1K9*pedestrianbuttons 6E9 9l5 9e22 2|1b14 6l5 6t22
+2R9*pedestrianbutton 4r34 6c9 8e14 2|2r33
+4U14*Press 4=20 2|2b13 5l8 5t13
+4r20 this{2R9} 2|2b19 4m7
+7b7*Pressed{boolean} 2|4m12
+

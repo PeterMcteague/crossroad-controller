@@ -1,0 +1,39 @@
+V "GNAT Lib v2017"
+A -O2
+A -Werror=format-security
+A -gnatA
+A -g
+A -gnata
+A -gnato
+A -gnatwa
+A -gnatVa
+A -gnat12
+A -mtune=generic
+A -march=pentium4
+P ZX
+
+RN
+RV NO_IMPLEMENTATION_PRAGMAS
+
+U vehiclelights%b	vehiclelights.adb	b3df3932 NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+
+U vehiclelights%s	vehiclelights.ads	e6208faf EE NE OO PK
+
+D interfac.ads		20170516105950 5ab55268 interfaces%s
+D system.ads		20170516105954 32a08138 system%s
+D vehiclelights.ads	20180219173218 e6208faf vehiclelights%s
+D vehiclelights.adb	20180219173226 55ffb69d vehiclelights%b
+X 3 vehiclelights.ads
+1K9*VehicleLights 7E9 10l5 10e18 4|1b14 7l5 7t18
+2R9*VehicleLight 5r43 7c9 9e14 4|2r43
+3E9*VehicleIndicator 3e55 5r65 8r19 4|2r68
+3n30*Red{3E9}
+3n34*RedAmber{3E9}
+3n43*Amber{3E9}
+3n49*Green{3E9}
+5V13*ChangeIndicator{boolean} 5=29 5>57 4|2b13 6l8 6t23
+5r29 this{2R9} 4|2b29 4m7
+5e57 value{3E9} 4|2b57 4r25
+8e7*Indicator{3E9} 4|4m12
+

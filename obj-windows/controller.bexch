@@ -1,0 +1,25 @@
+[MAPPING FILE]
+C:\Users\07mct\AppData\Local\Temp\GNAT-TEMP-000005.TMP
+[TOOLCHAIN VERSION]
+ada
+GNAT 2017
+[MAIN BASE NAME]
+controller
+[COMPILER PATH]
+c:\gnat\2017\bin\gcc.exe
+[COMPILER LEADING SWITCHES]
+-c
+-x
+ada
+-gnatA
+[MAIN DEPENDENCY FILE]
+H:\Year 3\Embedded Systems\Software\ICA\ica-windows\obj-windows\controller.ali
+[DEPENDENCY FILES]
+[BINDING OPTIONS]
+gnatbind_prefix=
+-E
+[PROJECT FILES]
+H:\Year 3\Embedded Systems\Software\ICA\ica-windows\controller_windows.gpr
+20170503170302
+H:\Year 3\Embedded Systems\Software\ICA\ica-windows\libxrif_windows.gpr
+20170503170302

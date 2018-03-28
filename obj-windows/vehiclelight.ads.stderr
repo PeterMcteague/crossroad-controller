@@ -1,0 +1,4 @@
+vehiclelight.ads:2:38: missing ";"
+vehiclelight.ads:3:07: component declaration expected
+vehiclelight.ads:3:07: missing "end record;" for "record" at line 2
+vehiclelight.ads:4:04: no "record" for this "end record"

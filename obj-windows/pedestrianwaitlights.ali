@@ -1,0 +1,36 @@
+V "GNAT Lib v2017"
+A -O2
+A -Werror=format-security
+A -gnatA
+A -g
+A -gnata
+A -gnato
+A -gnatwa
+A -gnatVa
+A -gnat12
+A -mtune=generic
+A -march=pentium4
+P ZX
+
+RN
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U pedestrianwaitlights%b  pedestrianwaitlights.adb  b933b4d4 NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+
+U pedestrianwaitlights%s  pedestrianwaitlights.ads  0f93e5c7 EE NE OO PK
+
+D interfac.ads		20170516105950 5ab55268 interfaces%s
+D pedestrianwaitlights.ads  20180219173842 0f93e5c7 pedestrianwaitlights%s
+D pedestrianwaitlights.adb  20180219173930 b6a05113 pedestrianwaitlights%b
+D system.ads		20170516105954 32a08138 system%s
+X 2 pedestrianwaitlights.ads
+1K9*PedestrianWaitLights 7E9 10l5 10e25 3|1b14 7l5 7t25
+2R9*PedestrianWaitLight 5r43 7c9 9e14 3|2r43
+3B9*WaitIndicator<boolean>
+5V13*ChangeIndicator{boolean} 5=29 5>64 3|2b13 6l8 6t23
+5r29 this{2R9} 3|2b29 4m7
+5b64 value{boolean} 3|2b64 4r29
+8b7*WaitIndicator{boolean} 3|4m12
+

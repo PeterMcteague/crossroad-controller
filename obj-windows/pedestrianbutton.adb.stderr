@@ -1,0 +1,2 @@
+pedestrianbutton.adb:3:03: declarations must come before "begin"
+pedestrianbutton.adb:8:01: statement expected
