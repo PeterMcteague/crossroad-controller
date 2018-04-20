@@ -3,12 +3,32 @@ with HWIF_Types; use HWIF_Types;
 
 procedure Controller is
    Delays : constant array (1..11) of Duration := (2.0,2.0,5.0,3.0,2.0,2.0,5.0,3.0,2.0,6.0,6.0);
-
    State : Integer := 1;
    NextState: Integer;
+
+   procedure CheckPedestrianButton is
+   begin
+      if (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1) then
+         Pedestrian_Wait(North) := 1;
+         Pedestrian_Wait(South) := 1;
+      end if;
+
+      if (Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1) then
+         Pedestrian_Wait(East) := 1;
+         Pedestrian_Wait(West) := 1;
+      end if;
+   end CheckPedestrianButton;
 begin
    Endless_Loop :
    loop
+      CheckPedestrianButton;
+
+      -- Checking for EV
+      -- Checking for pdesestrian
+
+      -- if Ada.Calendar."<="(Time_Next, Ada.Calendar.Clock) then
+
+
       case State is
          when 1 => --All red--
             Traffic_Light(North) := 4;
@@ -19,6 +39,8 @@ begin
             Pedestrian_Light(East) := 2;
             Pedestrian_Light(South) := 2;
             Pedestrian_Light(West) := 2;
+
+            -- Set a Next_State := Clock + Delays(State)
 
          when 2 => --NS RA--
             Traffic_Light(North) := 6;
@@ -31,9 +53,9 @@ begin
             --If emergency-
             if Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1 then
                while Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1 loop
-                  null; --I'm not looking to do anything, just hold it here
+                  CheckPedestrianButton; --I'm not looking to do anything, but checking for pedestrian buttons should be done because of how long we could potentially be here
                end loop;
-               delay 10.0;
+               delay 5.0; --Delayed for 5s as 5+5=10 , for req
             end if;
 
          when 4 => --NS A--
@@ -55,9 +77,9 @@ begin
             --If emergency-
             if Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1 then
                while Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1 loop
-                  null; --I'm not looking to do anything, just hold it here
+                  CheckPedestrianButton; --I'm not looking to do anything, but checking for pedestrian buttons should be done because of how long we could potentially be here
                end loop;
-               delay 10.0;
+               delay 5.0; --Delayed for 5s as 5+5=10 , for req
             end if;
 
          when 8 => --EW A--
@@ -86,20 +108,24 @@ begin
             null;
       end case;
 
+      CheckPedestrianButton; --Lets check it again
+
       --Checking what the next state should be--
       case State is
 
          when 1 =>
             --When N or S pedestrian buttons pressed and at an all red--
-            if (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1)
+            if (Pedestrian_Wait(North) = 1 or Pedestrian_Wait(South) = 1)
               and (Emergency_Vehicle_Sensor(North) /= 1 and Emergency_Vehicle_Sensor(South) /= 1) then
                NextState := 10;
             --When E or W pedestrian buttons pressed and at an all red--
-            elsif (Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1)
-              and (Emergency_Vehicle_Sensor(East) /= 1 and Emergency_Vehicle_Sensor(West) /= 1)then
+            elsif (Pedestrian_Wait(East) = 1 or Pedestrian_Wait(West) = 1)
+              and (Emergency_Vehicle_Sensor(East) /= 1 and Emergency_Vehicle_Sensor(West) /= 1) then
                NextState := 11;
+            else
+               NextState := State + 1;
             end if;
-            NextState := State + 1;
+
 
          when 9 =>
             NextState := 1;
@@ -109,13 +135,6 @@ begin
             NextState := 1;
 
          when others =>
-            if Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1 then
-               Pedestrian_Wait(North) := 1;
-               Pedestrian_Wait(South) := 1;
-            elsif Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1 then
-               Pedestrian_Wait(East) := 1;
-               Pedestrian_Wait(West) := 1;
-            end if;
             NextState := State + 1;
       end case;
 

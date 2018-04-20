@@ -1,4 +1,4 @@
-V "GNAT Lib v2017"
+V "GNAT Lib v2016"
 M P W=b
 A -O2
 A -Werror=format-security
@@ -21,51 +21,50 @@ RV NO_RELATIVE_DELAY
 RV NO_IMPLEMENTATION_PRAGMAS
 RV SPARK_05
 
-U controller%b		controller.adb		2ce9b339 NE OO SU
+U controller%b		controller.adb		18c330cd NE OO SU
 W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
 W hwif%s		hwif.ads		hwif.ali
 W hwif_types%s		hwif_types.ads		hwif_types.ali
 
-D ada.ads		20170516105950 76789da1 ada%s
-D a-calend.ads		20170516105954 2d5f01d4 ada.calendar%s
-D a-caldel.ads		20170516105948 9f20b83d ada.calendar.delays%s
-D a-unccon.ads		20170516105954 31484697 ada.unchecked_conversion%s
-D controller.adb	20180328163532 c550b594 controller%b
-D hwif.ads		20170503170302 e3b3d640 hwif%s
-D hwif_types.ads	20170503170302 0a0ad0ed hwif_types%s
-D interfac.ads		20170516105950 5ab55268 interfaces%s
-D mmap.ads		20170503170302 d61c1607 mmap%s
-D system.ads		20170516105954 32a08138 system%s
-D s-exctab.ads		20170516105954 54135002 system.exception_table%s
-D s-stalib.ads		20170516105954 09bd3940 system.standard_library%s
-D s-stoele.ads		20170516105956 2dc34a04 system.storage_elements%s
+D ada.ads		20160516092928 3ffc8e18 ada%s
+D a-calend.ads		20160516092930 2d5f01d4 ada.calendar%s
+D a-caldel.ads		20160516092926 9f20b83d ada.calendar.delays%s
+D a-unccon.ads		20160516092930 f9eb8f06 ada.unchecked_conversion%s
+D controller.adb	20180329013914 f17a3660 controller%b
+D hwif.ads		20170503160302 e3b3d640 hwif%s
+D hwif_types.ads	20170503160302 0a0ad0ed hwif_types%s
+D interfac.ads		20160516092928 5ab55268 interfaces%s
+D mmap.ads		20170503160302 d61c1607 mmap%s
+D system.ads		20160516092930 2da59038 system%s
+D s-exctab.ads		20160516092930 54135002 system.exception_table%s
+D s-stalib.ads		20160516092930 09bd3940 system.standard_library%s
+D s-stoele.ads		20160516092932 2dc34a04 system.storage_elements%s
 X 5 controller.adb
-4U11*Controller 4b11 146l5 146t15
-5a4 Delays(duration) 142r16
-7i4 State{integer} 12r12 100r12 132r29 137m10 139m10 142r23 143m10
-8i4 NextState{integer} 106m16 110m16 114m16 118m13 122m13 132m16 143r19
-10l4 Endless_Loop 145l13 145e25
+4U11*Controller 4b11 138l5 138t15
+5a4 Delays(duration) 134r13
+6i4 State{integer} 26r12 106r12 118r29 130r26 134r20 135m7
+7i4 NextState{integer} 112m16 116m16 118m16 123m13 127m13 130m13 135r16
+9U14 CheckPedestrianButton 9b14 20l8 20t29 24s7 48s19 72s19 103s7
+22l4 Endless_Loop 137l13 137e25
 X 6 hwif.ads
 8K9*HWIF 5|1w6 1r16 6|50e9
-17n23*North{17E9} 5|14r27 18r30 24r27 28r27 32r41 33r47 40r27 44r27 74r30
-. 76r29 86r30 90r29 104r35 108r38 113r36 125r34 126r32 136r35
-17n30*South{17E9} 5|16r27 20r30 25r27 29r27 32r80 33r86 41r27 45r27 75r30
-. 77r29 87r30 91r29 104r67 108r70 113r70 125r66 127r32 136r74
-17n37*East{17E9} 5|15r27 19r30 48r27 52r27 56r41 57r47 64r27 68r27 80r30
-. 82r29 88r30 92r29 105r36 109r36 112r38 128r37 129r32 138r38
-17n43*West{17E9} 5|17r27 21r30 49r27 53r27 56r79 57r85 65r27 69r27 81r30
-. 83r29 89r30 93r29 105r67 109r69 112r69 128r68 130r32 138r76
+17n23*North{17E9} 5|11r29 12r26 28r27 32r30 38r27 42r27 46r41 47r47 54r27
+. 58r27 88r30 90r29 110r33 111r45
+17n30*South{17E9} 5|11r61 13r26 30r27 34r30 39r27 43r27 46r80 47r86 55r27
+. 59r27 89r30 91r29 110r63 111r86
+17n37*East{17E9} 5|16r29 17r26 29r27 33r30 62r27 66r27 70r41 71r47 78r27
+. 82r27 94r30 96r29 114r36 115r45
+17n43*West{17E9} 5|16r60 18r26 31r27 35r30 63r27 67r27 70r79 71r85 79r27
+. 83r27 95r30 97r29 114r65 115r85
 18A9*Direction_Octet(7|7M9)<17E9>
-23a4*Traffic_Light{18A9} 5|14m13 15m13 16m13 17m13 24m13 25m13 28m13 29m13
-. 40m13 41m13 44m13 45m13 48m13 49m13 52m13 53m13 64m13 65m13 68m13 69m13
-29a4*Pedestrian_Light{18A9} 5|18m13 19m13 20m13 21m13 74m13 75m13 80m13 81m13
-. 86m13 87m13 88m13 89m13
-35a4*Pedestrian_Wait{18A9} 5|76m13 77m13 82m13 83m13 90m13 91m13 92m13 93m13
-. 126m16 127m16 129m16 130m16
-41a4*Pedestrian_Button{18A9} 5|104r17 104r49 105r18 105r49 108r20 108r52
-. 109r18 109r51 112r20 112r51 113r18 113r52 125r16 125r48 128r19 128r50
-47a4*Emergency_Vehicle_Sensor{18A9} 5|32r16 32r55 33r22 33r61 56r16 56r54
-. 57r22 57r60 136r10 136r49 138r13 138r51
+23a4*Traffic_Light{18A9} 5|28m13 29m13 30m13 31m13 38m13 39m13 42m13 43m13
+. 54m13 55m13 58m13 59m13 62m13 63m13 66m13 67m13 78m13 79m13 82m13 83m13
+29a4*Pedestrian_Light{18A9} 5|32m13 33m13 34m13 35m13 88m13 89m13 94m13 95m13
+35a4*Pedestrian_Wait{18A9} 5|12m10 13m10 17m10 18m10 90m13 91m13 96m13 97m13
+. 110r17 110r47 114r20 114r49
+41a4*Pedestrian_Button{18A9} 5|11r11 11r43 16r11 16r42
+47a4*Emergency_Vehicle_Sensor{18A9} 5|46r16 46r55 47r22 47r61 70r16 70r54
+. 71r22 71r60 111r20 111r61 115r20 115r60
 X 7 hwif_types.ads
 3K9*HWIF_Types 5|2w6 2r22 7|12e15
 7M9*Octet<8|63M9>
