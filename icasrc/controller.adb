@@ -3,53 +3,77 @@ with HWIF_Types; use HWIF_Types;
 With Ada.Calendar; use Ada.Calendar;
 
 procedure Controller is
-   Delays : constant array (1..11) of Duration := (0.5,0.5,5.0,3.0,0.5,0.5,5.0,3.0,0.5,6.0,6.0);
+   Delays : constant array (1..11) of Duration := (2.0,2.0,5.0,3.0,2.0,2.0,5.0,3.0,2.0,6.0,6.0);
    State : Integer := 1;
    NextState: Integer := 2;
    PreviousState: Integer := 1;
    Time_Next : Ada.Calendar.Time;
+   EV_Incoming_NS : Boolean := False;
+   EV_Incoming_EW : Boolean := False;
 
    --Sets the button to change after 0.2 seconds--
    procedure CheckPedestrianButton is
    begin
-      if (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1) and State /= 10 then
+      if (Pedestrian_Button(North) = 1 or Pedestrian_Button(South) = 1) and State /= 10
+         and (Pedestrian_Wait(North) /= 1 and Pedestrian_Wait(South) /= 1) then
          Pedestrian_Wait(North) := 1;
          Pedestrian_Wait(South) := 1;
       end if;
-      if (Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1) and State /= 11 then
+      if (Pedestrian_Button(East) = 1 or Pedestrian_Button(West) = 1) and State /= 11
+      and (Pedestrian_Wait(East) /= 1 and Pedestrian_Wait(West) /= 1)then
          Pedestrian_Wait(East) := 1;
          Pedestrian_Wait(West) := 1;
       end if;
    end CheckPedestrianButton;
 
    procedure CheckEV is
-      Inner_NextTime: Ada.Calendar.Time;
    begin
-       if State = 3 and (Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1) then
-         while Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1 loop
-            null;
-         end loop;
-         --Keep the state for 10 seconds more--
-         Inner_NextTime := Clock + 10.0;
-         while Ada.Calendar.">="(Inner_NextTime, Ada.Calendar.Clock) loop
-            CheckPedestrianButton;
-         end loop;
+      if (Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1) then
+         EV_Incoming_NS := True;
       end if;
 
-      if State = 7 and (Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1) then
-         while Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1 loop
-            null;
+      if (Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1) then
+         EV_Incoming_EW := True;
+      end if;
+   end CheckEV;
+
+   procedure HoldEV is
+      Inner_NextTime: Ada.Calendar.Time;
+   begin
+      if State = 3 and EV_Incoming_NS then
+         while Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1 loop
+            CheckPedestrianButton;
+            CheckEV;
          end loop;
          --Keep the state for 10 seconds more--
          Inner_NextTime := Clock + 10.0;
          while Ada.Calendar.">="(Inner_NextTime, Ada.Calendar.Clock) loop
             CheckPedestrianButton;
+            CheckEV;
          end loop;
+         EV_Incoming_NS := False;
       end if;
-   end CheckEV;
+
+      if State = 7 and EV_Incoming_EW then
+         while Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1 loop
+            CheckPedestrianButton;
+            CheckEV;
+         end loop;
+         --Keep the state for 10 seconds more--
+         Inner_NextTime := Clock + 10.0;
+         while Ada.Calendar.">="(Inner_NextTime, Ada.Calendar.Clock) loop
+            CheckPedestrianButton;
+            CheckEV;
+         end loop;
+         EV_Incoming_EW := False;
+      end if;
+   end HoldEV;
 begin
    Endless_Loop :
    loop
+      CheckPedestrianButton;
+      CheckEV;
+
       case State is
          when 1 => --All red--
             Traffic_Light(North) := 4;
@@ -118,6 +142,11 @@ begin
          CheckEV;
       end loop;
 
+      --Checking for special state actions--
+      if (State = 3 and EV_Incoming_NS) or (State = 7 and EV_Incoming_EW) then
+         HoldEV;
+      end if;
+
       --Checking what the next state should be--
       case State is
 
@@ -127,13 +156,13 @@ begin
             if (Pedestrian_Wait(North) = 1 or Pedestrian_Wait(South) = 1)
               and (Emergency_Vehicle_Sensor(North) /= 1 and Emergency_Vehicle_Sensor(South) /= 1)
               and (Emergency_Vehicle_Sensor(East) /= 1 and Emergency_Vehicle_Sensor(West) /= 1)
-              and (PreviousState /= 10 or PreviousState /= 11) then
+              and (PreviousState /= 10) then
                NextState := 10;
             --When E or W pedestrian buttons pressed and at an all red and there's no EV--
             elsif (Pedestrian_Wait(East) = 1 or Pedestrian_Wait(West) = 1)
               and (Emergency_Vehicle_Sensor(East) /= 1 and Emergency_Vehicle_Sensor(West) /= 1)
               and (Emergency_Vehicle_Sensor(North) /= 1 and Emergency_Vehicle_Sensor(South) /= 1)
-              and (PreviousState /= 10 or PreviousState /= 11) then
+              and (PreviousState /= 11) then
                NextState := 11;
             --If we're at all red and there's an EW EV , put EW to RA instead of NS--
             elsif (Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1) then
