@@ -3,9 +3,11 @@ with HWIF_Types; use HWIF_Types;
 With Ada.Calendar; use Ada.Calendar;
 
 procedure Controller is
+   subtype StateInt is Integer range 1..13;
+
    Delays : constant array (1..13) of Duration := (0.5,6.0,0.5,0.5,5.0,3.0,0.5,6.0,0.5,0.5,5.0,3.0,0.5); --Manages lengths of states--
-   State : Integer := 1; --The start state--
-   NextState: Integer; --The state to swap to after state--
+   State : StateInt := 1; --The start state--
+   NextState: StateInt; --The state to swap to after state--
    Time_Next : Ada.Calendar.Time; --Stores a calendar time, used for delays--
    EV_Incoming_NS : Boolean := False; --Whether an emergency vehicle is incoming--
    EV_Incoming_EW : Boolean := False;
@@ -81,7 +83,6 @@ procedure Controller is
 begin
    Endless_Loop :
    loop
-
       --Check for buttons and emergency vehicles right off--
       CheckPedestrianButton;
       CheckEV;
@@ -149,21 +150,18 @@ begin
          when 13 => --EW R--
             Traffic_Light(East) := 4;
             Traffic_Light(West) := 4;
-
-         when others =>
-            null;
       end case;
-
-      --Wait for set state length whilst checks for EV and Pedestriain buttons--
-      Time_Next := Clock + Delays(State);
-      while Ada.Calendar.">="(Time_Next, Ada.Calendar.Clock) loop
-         CheckPedestrianButton;
-         CheckEV;
-      end loop;
 
       --Check if we should hold the state for an emergency vehicle--
       if (State = 5 and EV_Incoming_NS) or (State = 11 and EV_Incoming_EW) then
          HoldEV;
+      else
+         --Wait for set state length whilst checks for EV and Pedestriain buttons--
+         Time_Next := Clock + Delays(State);
+         while Ada.Calendar.">="(Time_Next, Ada.Calendar.Clock) loop
+            CheckPedestrianButton;
+            CheckEV;
+         end loop;
       end if;
 
       --Checking what the next state should be--
