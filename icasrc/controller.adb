@@ -6,6 +6,7 @@ procedure Controller is
    subtype StateInt is Integer range 1..13;
 
    Delays : constant array (1..13) of Duration := (0.5,6.0,0.5,0.5,5.0,3.0,0.5,6.0,0.5,0.5,5.0,3.0,0.5); --Manages lengths of states--
+   ScanRate : constant Duration := 0.2; --The time between looping checks to reduce cpu usage--
    State : StateInt := 1; --The start state--
    NextState: StateInt; --The state to swap to after state--
    Time_Next : Ada.Calendar.Time; --Stores a calendar time, used for delays--
@@ -51,12 +52,14 @@ procedure Controller is
          while Emergency_Vehicle_Sensor(North) = 1 or Emergency_Vehicle_Sensor(South) = 1 loop
             CheckPedestrianButton;
             CheckEV;
+            Delay(ScanRate);
          end loop;
          --Keep the state for 10 seconds more--
          Inner_NextTime := Clock + 10.0;
          while Ada.Calendar.">="(Inner_NextTime, Ada.Calendar.Clock) loop
             CheckPedestrianButton;
             CheckEV;
+            Delay(ScanRate);
          end loop;
          --Mark that there's no longer an EV incoming--
          EV_Incoming_NS := False;
@@ -68,12 +71,14 @@ procedure Controller is
          while Emergency_Vehicle_Sensor(East) = 1 or Emergency_Vehicle_Sensor(West) = 1 loop
             CheckPedestrianButton;
             CheckEV;
+            Delay(ScanRate);
          end loop;
          --Keep the state for 10 seconds more--
          Inner_NextTime := Clock + 10.0;
          while Ada.Calendar.">="(Inner_NextTime, Ada.Calendar.Clock) loop
             CheckPedestrianButton;
             CheckEV;
+            Delay(ScanRate);
          end loop;
          --Mark that there's no longer an EV incoming--
          EV_Incoming_EW := False;
@@ -161,6 +166,7 @@ begin
          while Ada.Calendar.">="(Time_Next, Ada.Calendar.Clock) loop
             CheckPedestrianButton;
             CheckEV;
+            Delay(ScanRate);
          end loop;
       end if;
 
@@ -178,6 +184,20 @@ begin
                NextState := 2;
             else
                NextState := 4;
+            end if;
+
+         when 3 =>
+            if EV_Incoming_EW then
+               NextState := 10;
+            else
+               NextState := 4;
+            end if;
+
+         when 9 =>
+            if EV_Incoming_NS then
+               NextState := 4;
+            else
+               NextState := 10;
             end if;
 
          --If NS red--
